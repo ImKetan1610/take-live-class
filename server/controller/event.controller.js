@@ -132,4 +132,26 @@ const allUserEvents = asyncHandler(async (req, res) => {
   res.send(user.events);
 });
 
-module.exports = { createEvent, getAllEvents, joinEvent, accrejRequest, allUserEvents };
+// delete an event
+const deleteEvent = asyncHandler(async (req, res) => {
+  let eventId = req.params._id;
+  let singleEvent = await Event.findOne({ eventId });
+  if (!singleEvent) {
+    return res.status(404).send({ message: "Event not found" });
+  }
+  try {
+    let delEvent = await Event.findByIdAndDelete(eventId);
+    return res.status(200).send(delEvent);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+module.exports = {
+  createEvent,
+  getAllEvents,
+  joinEvent,
+  accrejRequest,
+  allUserEvents,
+  deleteEvent
+};
